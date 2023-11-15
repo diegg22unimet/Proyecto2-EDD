@@ -9,18 +9,38 @@ package coladeimpresion;
  * @author manza
  */
 public class User {
-    private String name;
+    private String username;
+    private String priority;
+    List<Document> createdDocuments;
 
-    public User(String name) {
-        this.name = name;
+    public User(String username, String priority) {
+        this.username = username;
+        this.priority = priority;
+        this.createdDocuments = new List<>();
     }
 
-    public String getName() {
-        return name;
+    public String getUsername() {
+        return username;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setUsername(String username) {
+        this.username = username;
     }
-    
+
+    public String getPriority() {
+        return priority;
+    }
+
+    public void setPriority(String priority) {
+        this.priority = priority;
+    }
+
+    public List<Document> getCreatedDocuments() {
+        return createdDocuments;
+    }
+
+    public void setCreatedDocuments(List<Document> createdDocuments) {
+        this.createdDocuments = createdDocuments;
+    }
+
 }
