@@ -8,6 +8,11 @@ package coladeimpresion;
  *
  * @author manza
  */
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.Scanner;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -23,6 +28,17 @@ public class Interfaz extends javax.swing.JFrame {
         
         FileNameExtensionFilter filter = new FileNameExtensionFilter("Csv Files","csv");
         fileChooser.setFileFilter(filter);
+    }
+    
+    private List<String> getRecordFromLine(String line) {
+        List<String> values = new List<String>();
+        try (Scanner rowScanner = new Scanner(line)) {
+            rowScanner.useDelimiter(",");
+            while (rowScanner.hasNext()) {
+                values.append(rowScanner.next());
+            }
+        }
+        return values;
     }
 
     /**
@@ -268,7 +284,26 @@ public class Interfaz extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
+        if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+            String name = fileChooser.getSelectedFile().getAbsolutePath();
+            
+            try {
+                File file = new File(name);
+                FileReader fr = new FileReader(file);
+                BufferedReader br = new BufferedReader(fr);
+                String line = " ";
+                String[] tempArr;
+                while ((line = br.readLine()) != null && line.split(",").length > 1) {
+                    tempArr = line.split(",");
+                    User newUser = new User(tempArr[0], tempArr[1]);
+                }
+                br.close();
+              }
+              catch(IOException ioe) {
+                ioe.printStackTrace();
+              }
+            
+        }
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
