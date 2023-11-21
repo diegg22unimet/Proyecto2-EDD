@@ -104,5 +104,13 @@ public class BinaryHeap {
         heap[i] = heap[j];
         heap[j] = temp;
     }
+    
+    public String printHeap() {
+        String result = "";
+        for (int i = 1; i <= size; i++) {
+            result += heap[i].getDocument().getName() + " (" + heap[i].getTime() + ") \n";
+        }
+        return result;
+    }
 
 }
