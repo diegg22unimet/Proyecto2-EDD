@@ -20,6 +20,7 @@ public class Interfaz extends javax.swing.JFrame {
     
     List<User> userList = new List<>();
     BinaryHeap priorityQueue = new BinaryHeap(300);
+    long timer;
     
     public Interfaz() {
         initComponents();
@@ -28,6 +29,7 @@ public class Interfaz extends javax.swing.JFrame {
         
         FileNameExtensionFilter filter = new FileNameExtensionFilter("Csv Files","csv");
         fileChooser.setFileFilter(filter);
+        timer = System.nanoTime();
     }
     
     private List<String> getRecordFromLine(String line) {
@@ -395,6 +397,11 @@ public class Interfaz extends javax.swing.JFrame {
         jScrollPane1.setViewportView(jTextArea1);
 
         jButton9.setText("Liberar Impresora");
+        jButton9.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton9ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -572,11 +579,21 @@ public class Interfaz extends javax.swing.JFrame {
             }
             aux2 = aux2.getNext();
         }
-           
+ 
+        //Código seconds
         
         Register newRegister = new Register(aux2.getData(), 1);
         priorityQueue.insert(newRegister);
+        
+        String queueOrder = priorityQueue.printHeap();
+        jTextArea1.setText(queueOrder);
     }//GEN-LAST:event_jButton7ActionPerformed
+
+    private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
+        priorityQueue.extractMin();
+        String queueOrder = priorityQueue.printHeap();
+        jTextArea1.setText(queueOrder);
+    }//GEN-LAST:event_jButton9ActionPerformed
 
     /**
      * @param args the command line arguments
