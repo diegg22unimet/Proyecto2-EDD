@@ -11,9 +11,9 @@ package coladeimpresion;
 public class Document {
     private String name;
     private String type;
-    private int size;
+    private String size;
 
-    public Document(String name, String type, int size) {
+    public Document(String name, String type, String size) {
         this.name = name;
         this.type = type;
         this.size = size;
@@ -35,13 +35,12 @@ public class Document {
         this.type = type;
     }
 
-    public int getSize() {
+    public String getSize() {
         return size;
     }
 
-    public void setSize(int size) {
+    public void setSize(String size) {
         this.size = size;
     }
-    
-    
+
 }

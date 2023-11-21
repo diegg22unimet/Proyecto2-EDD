@@ -71,5 +71,29 @@ public class List<T> {
         }
         return null;
     }
-    
+
+    public void delete(Node node) {
+        if (node == null) {
+            return;
+        }
+
+        if (head == node) {
+            head = head.getNext();
+            return;
+        }
+
+        Node current = getHead();
+        Node prev = null;
+        while (current != null && current != node) {
+            prev = current;
+            current = current.getNext();
+        }
+
+        if (current == null) {
+            return;
+        }
+	
+	prev.setNext(current.getNext());
+    }
+
 }
