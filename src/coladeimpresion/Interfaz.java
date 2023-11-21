@@ -451,7 +451,24 @@ public class Interfaz extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
-        // TODO add your handling code here:
+        String docName = jTextField3.getText();
+        String docSize = jTextField2.getText();
+        String docType = jTextField4.getText();
+        String username = chooseUser.getSelectedItem().toString();
+        
+        Document newDoc = new Document(docName, docSize, docType);
+        
+        Node<User> aux = userList.getHead();
+        while(aux != null){
+            if(aux.getData().getUsername().equals(username)){
+                break;
+            }
+            aux = aux.getNext();
+        }
+                
+        aux.getData().getCreatedDocuments().append(newDoc);
+        jComboBox1.addItem(newDoc.getName());
+        jComboBox4.addItem(newDoc.getName());
     }//GEN-LAST:event_jButton6ActionPerformed
 
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
