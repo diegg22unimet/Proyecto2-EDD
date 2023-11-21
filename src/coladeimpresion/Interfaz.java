@@ -253,6 +253,11 @@ public class Interfaz extends javax.swing.JFrame {
         jLabel12.setText("Elegir Usuario");
 
         jButton8.setText("Eliminar");
+        jButton8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton8ActionPerformed(evt);
+            }
+        });
 
         jLabel4.setText("Tamaño");
 
@@ -478,6 +483,31 @@ public class Interfaz extends javax.swing.JFrame {
     private void jTextField3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField3ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField3ActionPerformed
+
+    private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
+        String docName = jComboBox4.getSelectedItem().toString();
+        String username = chooseUser.getSelectedItem().toString();
+        
+        Node<User> aux = userList.getHead();
+        while(aux != null){
+            if(aux.getData().getUsername().equals(username)){
+                break;
+            }
+            aux = aux.getNext();
+        }
+        
+        List<Document> documents = aux.getData().getCreatedDocuments();
+        Node<Document> aux2 = documents.getHead();
+        while(aux2 != null){
+            if(aux2.getData().getName().equals(docName)){
+                break;
+            }
+            aux2 = aux2.getNext();
+        }
+                
+        documents.delete(aux2);
+        jComboBox1.removeItem(docName);
+        jComboBox4.removeItem(docName);    }//GEN-LAST:event_jButton8ActionPerformed
 
     /**
      * @param args the command line arguments
