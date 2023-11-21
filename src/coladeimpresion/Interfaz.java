@@ -579,10 +579,20 @@ public class Interfaz extends javax.swing.JFrame {
             }
             aux2 = aux2.getNext();
         }
- 
-        //Código seconds
+
+        long seconds = (System.nanoTime() - timer)/1000000000;
+        String isImportant = jComboBox3.getSelectedItem().toString();
+        if(isImportant.equals("Es prioritario")){
+            String userPriority = aux.getData().getPriority();
+            seconds = switch (userPriority) {
+                case "Baja" -> seconds/2;
+                case "Media" -> seconds/3;
+                default -> seconds/4;
+            };
+        }
+        System.out.println(seconds);
         
-        Register newRegister = new Register(aux2.getData(), 1);
+        Register newRegister = new Register(aux2.getData(), (int)seconds);
         priorityQueue.insert(newRegister);
         
         String queueOrder = priorityQueue.printHeap();
