@@ -20,16 +20,15 @@ public class Interfaz extends javax.swing.JFrame {
     
     List<User> userList = new List<>();
     BinaryHeap priorityQueue = new BinaryHeap(300);
-    long timer;
+    User currentUser = null;
+    long initTime = System.nanoTime();
     
     public Interfaz() {
         initComponents();
         this.setLocationRelativeTo(null);
         this.setResizable(false);
-        
         FileNameExtensionFilter filter = new FileNameExtensionFilter("Csv Files","csv");
         fileChooser.setFileFilter(filter);
-        timer = System.nanoTime();
     }
     
     private List<String> getRecordFromLine(String line) {
@@ -187,6 +186,11 @@ public class Interfaz extends javax.swing.JFrame {
         jLabel3.setText("Nombre");
 
         jButton5.setText("Eliminar");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -252,6 +256,12 @@ public class Interfaz extends javax.swing.JFrame {
         );
 
         jTabbedPane4.addTab("Usuarios", jPanel1);
+
+        chooseUser.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                chooseUserActionPerformed(evt);
+            }
+        });
 
         jLabel12.setFont(new java.awt.Font("Segoe UI Semibold", 0, 14)); // NOI18N
         jLabel12.setText("Elegir Usuario");
@@ -512,19 +522,9 @@ public class Interfaz extends javax.swing.JFrame {
         String docName = jTextField3.getText();
         String docSize = jTextField2.getText();
         String docType = jTextField4.getText();
-        String username = chooseUser.getSelectedItem().toString();
         
         Document newDoc = new Document(docName, docType, docSize);
-        
-        Node<User> aux = userList.getHead();
-        while(aux != null){
-            if(aux.getData().getUsername().equals(username)){
-                break;
-            }
-            aux = aux.getNext();
-        }
-                
-        aux.getData().getCreatedDocuments().append(newDoc);
+        currentUser.getCreatedDocuments().append(newDoc);
         jComboBox1.addItem(newDoc.getName());
         jComboBox4.addItem(newDoc.getName());
     }//GEN-LAST:event_jButton6ActionPerformed
@@ -561,36 +561,29 @@ public class Interfaz extends javax.swing.JFrame {
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
         String docName = jComboBox4.getSelectedItem().toString();
-        String username = chooseUser.getSelectedItem().toString();
         
-        Node<User> aux = userList.getHead();
-        while(aux != null){
-            if(aux.getData().getUsername().equals(username)){
-                break;
-            }
-            aux = aux.getNext();
-        }
-        
-        List<Document> documents = aux.getData().createdDocuments;
+        List<Document> documents = currentUser.getCreatedDocuments();
         Node<Document> aux2 = documents.getHead();
         while(aux2 != null){
             if(aux2.getData().getName().equals(docName)){
+                currentUser.createdDocuments.delete(aux2);
+                jComboBox1.removeItem(aux2.getData().getName());
+                jComboBox4.removeItem(aux2.getData().getName());
                 break;
             }
             aux2 = aux2.getNext();
         }
 
-        long seconds = (System.nanoTime() - timer)/1000000000;
+        long seconds = (System.nanoTime() - initTime)/1000000000;
         String isImportant = jComboBox3.getSelectedItem().toString();
         if(isImportant.equals("Es prioritario")){
-            String userPriority = aux.getData().getPriority();
+            String userPriority = currentUser.getPriority();
             seconds = switch (userPriority) {
                 case "Baja" -> seconds/2;
                 case "Media" -> seconds/3;
                 default -> seconds/4;
             };
         }
-        System.out.println(seconds);
         
         Register newRegister = new Register(aux2.getData(), (int)seconds);
         priorityQueue.insert(newRegister);
@@ -604,6 +597,43 @@ public class Interfaz extends javax.swing.JFrame {
         String queueOrder = priorityQueue.printHeap();
         jTextArea1.setText(queueOrder);
     }//GEN-LAST:event_jButton9ActionPerformed
+
+    private void chooseUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chooseUserActionPerformed
+        String username = chooseUser.getSelectedItem().toString();
+        
+        Node<User> aux = userList.getHead();
+        while(aux != null){
+            if(aux.getData().getUsername().equals(username)){
+                break;
+            }
+            aux = aux.getNext();
+        }
+        currentUser = aux.getData();
+        
+        jComboBox1.removeAllItems();
+        jComboBox4.removeAllItems();
+        Node<Document> aux2 = currentUser.createdDocuments.getHead();
+        while(aux2 != null){
+            jComboBox1.addItem(aux2.getData().getName());
+            jComboBox4.addItem(aux2.getData().getName());
+            aux2 = aux2.getNext();
+        }
+    }//GEN-LAST:event_chooseUserActionPerformed
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        String username = deleteUsersList.getSelectedItem().toString();
+        Node<User> aux = userList.getHead();
+        while(aux != null){
+            if(aux.getData().getUsername().equals(username)){
+                userList.delete(aux);
+                chooseUser.removeItem(username);
+                deleteUsersList.removeItem(username);
+                jComboBox1.removeItem(username);
+                jComboBox4.removeItem(username);
+            }
+            aux = aux.getNext();
+        }
+    }//GEN-LAST:event_jButton5ActionPerformed
 
     /**
      * @param args the command line arguments
