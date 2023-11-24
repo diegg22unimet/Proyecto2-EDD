@@ -32,9 +32,9 @@ public class HashTable {
         private String username;
         private List<Register> documentsInPrinter;
 
-        public UserDocuments(String username) {
+        public UserDocuments(String username, List<Register> documentsInPrinter) {
             this.username = username;
-            this.documentsInPrinter = new List<>();
+            this.documentsInPrinter = documentsInPrinter;
         }
 
         public String getUsername() {
@@ -73,7 +73,7 @@ public class HashTable {
             u = u.getNext();
         } 
             
-        UserDocuments user = new UserDocuments(username);
+        UserDocuments user = new UserDocuments(username, documents);
         list.append(user);
     }
     

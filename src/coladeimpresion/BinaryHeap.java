@@ -49,7 +49,6 @@ public class BinaryHeap {
     
     public void insert(Register value) {
         if (getSize() == getCapacity()) {
-            System.out.println("Heap is full. Cannot insert.");
             return;
         }
         
@@ -71,13 +70,23 @@ public class BinaryHeap {
         }
 
         Register min = heap[1];
-        heap[1] = heap[size];
+        heap[1] = heap[getSize()];
         size--;
 
         // Restaurar la propiedad del min-heap después de la extracción
         heapify(1);
 
         return min;
+    }
+    
+    public int findIndex(Register targetRegister) {
+        for (int i = 1; i <= getSize(); i++) {
+            if (heap[i] == targetRegister) {
+                return i;
+            }
+        }
+        // Si no se encuentra el Register, devuelve -1 o maneja la situación de alguna manera específica.
+        return -1;
     }
     
     private void heapify(int index) {
@@ -97,6 +106,24 @@ public class BinaryHeap {
             swap(index, smallest);
             heapify(smallest);
         }
+    }
+    
+    public void updateRegisterValue(int index, int newTime) {
+        if (index < 1 || index > getSize()) {
+            System.out.println("Invalid index");
+            return;
+        }
+
+        heap[index].setTime(newTime); //Ojo
+
+        // Comprueba si el valor modificado es menor que el valor de su padre
+        while (index > 1 && heap[index].getTime() < heap[index / 2].getTime()) {
+            swap(index, index / 2);
+            index = index / 2;
+        }
+
+        // Después de la actualización, ejecuta heapify desde el índice modificado
+        heapify(index);
     }
     
     private void swap(int i, int j) {
