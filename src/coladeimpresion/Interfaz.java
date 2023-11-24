@@ -20,6 +20,7 @@ public class Interfaz extends javax.swing.JFrame {
     
     List<User> userList = new List<>();
     BinaryHeap priorityQueue = new BinaryHeap(300);
+    HashTable hashTable = new HashTable();
     User currentUser = null;
     long initTime = System.nanoTime();
     
@@ -677,7 +678,15 @@ public class Interfaz extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jComboBox5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox5ActionPerformed
-        // TODO add your handling code here:
+        String username = jComboBox5.getSelectedItem().toString();
+        
+        List<Register> documentsInPrinter = hashTable.get(username);
+        Node<Register> aux = documentsInPrinter.getHead();
+        jComboBox6.removeAllItems();
+        while(aux != null){
+            jComboBox6.addItem(aux.getData().getDocument().getName());
+            aux = aux.getNext();
+        }
     }//GEN-LAST:event_jComboBox5ActionPerformed
 
     private void jComboBox6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox6ActionPerformed
@@ -685,7 +694,25 @@ public class Interfaz extends javax.swing.JFrame {
     }//GEN-LAST:event_jComboBox6ActionPerformed
 
     private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
-        // TODO add your handling code here:
+        String username = jComboBox5.getSelectedItem().toString();
+        String docName = jComboBox6.getSelectedItem().toString();
+        
+        List<Register> documentsInPrinter = hashTable.get(username);
+        Node<Register> aux = documentsInPrinter.getHead();
+        while(aux != null){
+            if(aux.getData().getDocument().getName().equals(docName)){
+                int index = priorityQueue.findIndex(aux.getData());
+                priorityQueue.updateRegisterValue(index, 0);
+                priorityQueue.extractMin();
+                
+                String queueOrder = priorityQueue.printHeap();
+                jTextArea1.setText(queueOrder);
+                
+                jComboBox6.removeItem(docName);
+                break;
+            }
+            aux = aux.getNext();
+        }
     }//GEN-LAST:event_jButton10ActionPerformed
 
     /**
