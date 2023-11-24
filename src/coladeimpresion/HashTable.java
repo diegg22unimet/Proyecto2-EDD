@@ -56,18 +56,18 @@ public class HashTable {
     
     public HashTable(){
         hashTable = new List<>();
-        for (int i = 0; i < max; i++) {
+        for (int i = 0; i < getMax(); i++) {
             hashTable.append(new List<>());
         }
     }
     
     public void put(String username, List<Register> documents) {
-        List<UserDocuments> list = hashTable.get(Math.abs(username.hashCode()) % max);
+        List<UserDocuments> list = hashTable.get(Math.abs(username.hashCode()) % getMax());
         
         Node<UserDocuments> u = list.getHead();
         while(u != null){
             if (u.getData().getUsername().equals(username)){
-                u.getData().documentsInPrinter = documents;
+                u.getData().setDocumentsInPrinter(documents);
                 return;
             }
             u = u.getNext();
@@ -78,7 +78,7 @@ public class HashTable {
     }
     
     public List<Register> get(String username) {
-        List<UserDocuments> list = hashTable.get(Math.abs(username.hashCode()) % max);
+        List<UserDocuments> list = hashTable.get(Math.abs(username.hashCode()) % getMax());
 
         if (list != null) {
             Node<UserDocuments> u = list.getHead();

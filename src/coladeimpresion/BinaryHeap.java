@@ -114,7 +114,7 @@ public class BinaryHeap {
             return;
         }
 
-        heap[index].setTime(newTime); //Ojo
+        heap[index].setTime(newTime);
 
         // Comprueba si el valor modificado es menor que el valor de su padre
         while (index > 1 && heap[index].getTime() < heap[index / 2].getTime()) {

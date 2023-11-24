@@ -32,16 +32,6 @@ public class Interfaz extends javax.swing.JFrame {
         fileChooser.setFileFilter(filter);
     }
     
-    private List<String> getRecordFromLine(String line) {
-        List<String> values = new List<>();
-        try (Scanner rowScanner = new Scanner(line)) {
-            rowScanner.useDelimiter(",");
-            while (rowScanner.hasNext()) {
-                values.append(rowScanner.next());
-            }
-        }
-        return values;
-    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -189,6 +179,12 @@ public class Interfaz extends javax.swing.JFrame {
         });
 
         jLabel3.setText("Nombre");
+
+        deleteUsersList.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteUsersListActionPerformed(evt);
+            }
+        });
 
         jButton5.setText("Eliminar");
         jButton5.addActionListener(new java.awt.event.ActionListener() {
@@ -632,6 +628,17 @@ public class Interfaz extends javax.swing.JFrame {
         
         String queueOrder = priorityQueue.printHeap();
         jTextArea1.setText(queueOrder);
+        
+        List<Register> documentsInPrinter = hashTable.get(currentUser.getUsername());
+        if(documentsInPrinter != null){
+            documentsInPrinter.append(newRegister);
+            hashTable.put(currentUser.getUsername(), documentsInPrinter);
+        } else {
+            documentsInPrinter = new List<>();
+            documentsInPrinter.append(newRegister);
+            hashTable.put(currentUser.getUsername(), documentsInPrinter);
+            jComboBox5.addItem(currentUser.getUsername());
+        }
     }//GEN-LAST:event_jButton7ActionPerformed
 
     private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
@@ -654,7 +661,7 @@ public class Interfaz extends javax.swing.JFrame {
         
         jComboBox1.removeAllItems();
         jComboBox4.removeAllItems();
-        Node<Document> aux2 = currentUser.createdDocuments.getHead();
+        Node<Document> aux2 = currentUser.getCreatedDocuments().getHead();
         while(aux2 != null){
             jComboBox1.addItem(aux2.getData().getName());
             jComboBox4.addItem(aux2.getData().getName());
@@ -714,6 +721,10 @@ public class Interfaz extends javax.swing.JFrame {
             aux = aux.getNext();
         }
     }//GEN-LAST:event_jButton10ActionPerformed
+
+    private void deleteUsersListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteUsersListActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_deleteUsersListActionPerformed
 
     /**
      * @param args the command line arguments
