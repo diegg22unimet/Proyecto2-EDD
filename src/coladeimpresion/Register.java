@@ -33,4 +33,9 @@ public class Register {
         this.time = time;
     }
 
+    @Override
+    public String toString(){
+        return "(" + time + ")";
+    }
+    
 }

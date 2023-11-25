@@ -8,12 +8,23 @@ package coladeimpresion;
  *
  * @author manza
  */
+import edu.uci.ics.jung.algorithms.layout.*;
+import edu.uci.ics.jung.graph.*;
+import edu.uci.ics.jung.visualization.*;
+import edu.uci.ics.jung.visualization.decorators.ToStringLabeller;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Scanner;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.filechooser.FileNameExtensionFilter; 
 
 public class Interfaz extends javax.swing.JFrame {
@@ -28,8 +39,23 @@ public class Interfaz extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(null);
         this.setResizable(false);
-        FileNameExtensionFilter filter = new FileNameExtensionFilter("Csv Files","csv");
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("CSV File","csv");
         fileChooser.setFileFilter(filter);
+    }
+    
+    public void setDocumentsInPrinter(){
+        if(jComboBox5.getSelectedItem() == null){
+            return;
+        }
+        String username = jComboBox5.getSelectedItem().toString();     
+        List<Register> documentsInPrinter = hashTable.get(username);
+        Node<Register> aux = documentsInPrinter.getHead();
+        jComboBox6.removeAllItems();
+        
+        while(aux != null && aux.getData().getTime() != -1){
+            jComboBox6.addItem(aux.getData().getDocument().getName());
+            aux = aux.getNext();
+        }
     }
     
     /**
@@ -88,6 +114,7 @@ public class Interfaz extends javax.swing.JFrame {
         jComboBox5 = new javax.swing.JComboBox<>();
         jComboBox6 = new javax.swing.JComboBox<>();
         jButton10 = new javax.swing.JButton();
+        jButton11 = new javax.swing.JButton();
 
         jLabel6.setText("Recuerde guardar los datos del grafo anterior !");
 
@@ -407,7 +434,7 @@ public class Interfaz extends javax.swing.JFrame {
         jTextArea1.setRows(5);
         jScrollPane1.setViewportView(jTextArea1);
 
-        jButton9.setText("Liberar Impresora");
+        jButton9.setText("Liberar impresora");
         jButton9.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton9ActionPerformed(evt);
@@ -436,6 +463,13 @@ public class Interfaz extends javax.swing.JFrame {
             }
         });
 
+        jButton11.setText("Ver Grafo");
+        jButton11.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton11ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -443,8 +477,6 @@ public class Interfaz extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(21, 21, 21)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 352, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel9)
                     .addComponent(jLabel10)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(jComboBox5, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -452,12 +484,16 @@ public class Interfaz extends javax.swing.JFrame {
                         .addComponent(jComboBox6, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGap(116, 116, 116)
-                        .addComponent(jButton10, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jButton10, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 352, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel9))
                 .addContainerGap(18, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(52, 52, 52)
+                .addComponent(jButton11, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jButton9)
-                .addGap(131, 131, 131))
+                .addGap(48, 48, 48))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -465,10 +501,12 @@ public class Interfaz extends javax.swing.JFrame {
                 .addGap(23, 23, 23)
                 .addComponent(jLabel9)
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jButton9)
-                .addGap(12, 12, 12)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton9)
+                    .addComponent(jButton11))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
                 .addComponent(jLabel10)
                 .addGap(18, 18, 18)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -476,7 +514,7 @@ public class Interfaz extends javax.swing.JFrame {
                     .addComponent(jComboBox6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jButton10)
-                .addContainerGap(84, Short.MAX_VALUE))
+                .addGap(25, 25, 25))
         );
 
         jTabbedPane4.addTab("Impresora", jPanel3);
@@ -544,12 +582,14 @@ public class Interfaz extends javax.swing.JFrame {
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         String username = jTextField1.getText();
-        String priority = jComboBox2.getSelectedItem().toString();
-        User newUser = new User(username, priority);
-        userList.append(newUser);
-        deleteUsersList.addItem(username);
-        chooseUser.addItem(username);
-        jTextField1.setText("");
+        if (username.isBlank() == false) {
+            String priority = jComboBox2.getSelectedItem().toString();
+            User newUser = new User(username, priority);
+            userList.append(newUser);
+            deleteUsersList.addItem(username);
+            chooseUser.addItem(username);
+            jTextField1.setText("");
+        }
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jTextField3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField3ActionPerformed
@@ -561,10 +601,18 @@ public class Interfaz extends javax.swing.JFrame {
         String docSize = jTextField2.getText();
         String docType = jTextField4.getText();
         
+        if(docName.isBlank() || docSize.isBlank() || docType.isBlank()){
+            return;
+        }
+        
         Document newDoc = new Document(docName, docType, docSize);
         currentUser.getCreatedDocuments().append(newDoc);
         jComboBox1.addItem(newDoc.getName());
         jComboBox4.addItem(newDoc.getName());
+        
+        jTextField3.setText("");
+        jTextField2.setText("");
+        jTextField4.setText("");
     }//GEN-LAST:event_jButton6ActionPerformed
 
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
@@ -572,32 +620,31 @@ public class Interfaz extends javax.swing.JFrame {
     }//GEN-LAST:event_jComboBox1ActionPerformed
 
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
-        String docName = jComboBox4.getSelectedItem().toString();
-        String username = chooseUser.getSelectedItem().toString();
+        if(jComboBox4.getSelectedItem() == null || chooseUser.getSelectedItem() == null){
+            return;
+        }
         
-        Node<User> aux = userList.getHead();
+        String docName = jComboBox4.getSelectedItem().toString();
+        List<Document> documents = currentUser.getCreatedDocuments();
+        
+        Node<Document> aux = documents.getHead();
         while(aux != null){
-            if(aux.getData().getUsername().equals(username)){
+            if(aux.getData().getName().equals(docName)){
+                documents.delete(aux);
                 break;
             }
             aux = aux.getNext();
         }
-        
-        List<Document> documents = aux.getData().getCreatedDocuments();
-        Node<Document> aux2 = documents.getHead();
-        while(aux2 != null){
-            if(aux2.getData().getName().equals(docName)){
-                break;
-            }
-            aux2 = aux2.getNext();
-        }
                 
-        documents.delete(aux2);
         jComboBox1.removeItem(docName);
         jComboBox4.removeItem(docName);
     }//GEN-LAST:event_jButton8ActionPerformed
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+        if(jComboBox4.getSelectedItem() == null){
+            return;
+        }
+        
         String docName = jComboBox4.getSelectedItem().toString();
         
         List<Document> documents = currentUser.getCreatedDocuments();
@@ -639,15 +686,32 @@ public class Interfaz extends javax.swing.JFrame {
             hashTable.put(currentUser.getUsername(), documentsInPrinter);
             jComboBox5.addItem(currentUser.getUsername());
         }
+        setDocumentsInPrinter();
     }//GEN-LAST:event_jButton7ActionPerformed
 
     private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
-        priorityQueue.extractMin();
-        String queueOrder = priorityQueue.printHeap();
-        jTextArea1.setText(queueOrder);
+        Register r = priorityQueue.extractMin();
+        if(r != null){
+            String docName = r.getDocument().getName();
+            
+            r.setTime(-1);
+            
+            String queueOrder = priorityQueue.printHeap();
+            jTextArea1.setText(queueOrder);
+            jComboBox6.removeItem(docName);
+            int itemsLeft = jComboBox6.getItemCount();
+            
+            if(itemsLeft == 0){
+                jComboBox5.removeItem(jComboBox5.getSelectedItem().toString());
+            }
+        }
     }//GEN-LAST:event_jButton9ActionPerformed
 
     private void chooseUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chooseUserActionPerformed
+        if (chooseUser.getSelectedItem() == null) {
+            return;
+        }
+        
         String username = chooseUser.getSelectedItem().toString();
         
         Node<User> aux = userList.getHead();
@@ -670,6 +734,10 @@ public class Interfaz extends javax.swing.JFrame {
     }//GEN-LAST:event_chooseUserActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        if (deleteUsersList.getSelectedItem() == null) {
+            return;
+        }
+        
         String username = deleteUsersList.getSelectedItem().toString();
         Node<User> aux = userList.getHead();
         while(aux != null){
@@ -685,15 +753,7 @@ public class Interfaz extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jComboBox5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox5ActionPerformed
-        String username = jComboBox5.getSelectedItem().toString();
-        
-        List<Register> documentsInPrinter = hashTable.get(username);
-        Node<Register> aux = documentsInPrinter.getHead();
-        jComboBox6.removeAllItems();
-        while(aux != null){
-            jComboBox6.addItem(aux.getData().getDocument().getName());
-            aux = aux.getNext();
-        }
+        setDocumentsInPrinter();
     }//GEN-LAST:event_jComboBox5ActionPerformed
 
     private void jComboBox6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox6ActionPerformed
@@ -701,6 +761,10 @@ public class Interfaz extends javax.swing.JFrame {
     }//GEN-LAST:event_jComboBox6ActionPerformed
 
     private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
+        if(jComboBox5.getSelectedItem() == null || jComboBox6.getSelectedItem() == null){
+            return;
+        }
+        
         String username = jComboBox5.getSelectedItem().toString();
         String docName = jComboBox6.getSelectedItem().toString();
         
@@ -710,12 +774,18 @@ public class Interfaz extends javax.swing.JFrame {
             if(aux.getData().getDocument().getName().equals(docName)){
                 int index = priorityQueue.findIndex(aux.getData());
                 priorityQueue.updateRegisterValue(index, 0);
-                priorityQueue.extractMin();
+                Register r = priorityQueue.extractMin();
+                
+                r.setTime(-1);
                 
                 String queueOrder = priorityQueue.printHeap();
                 jTextArea1.setText(queueOrder);
-                
                 jComboBox6.removeItem(docName);
+                int itemsLeft = jComboBox6.getItemCount();
+                
+                if(itemsLeft == 0){
+                    jComboBox5.removeItem(jComboBox5.getSelectedItem().toString());
+                }
                 break;
             }
             aux = aux.getNext();
@@ -725,6 +795,44 @@ public class Interfaz extends javax.swing.JFrame {
     private void deleteUsersListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteUsersListActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_deleteUsersListActionPerformed
+
+    private void jButton11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton11ActionPerformed
+        UndirectedSparseGraph<Register, String> graph = new UndirectedSparseGraph<>();
+        for (int i = 1; i <= priorityQueue.getSize(); i++) {
+            graph.addVertex(priorityQueue.getHeap()[i]);
+            if (i > 1) {
+                graph.addEdge(Integer.toString(i), priorityQueue.getHeap()[i / 2], priorityQueue.getHeap()[i]);
+            }
+        }
+
+        Layout<Register, String> layout = new CircleLayout<>(graph);
+        VisualizationViewer<Register, String> vv = new VisualizationViewer<>(layout);
+
+        vv.getRenderContext().setVertexLabelTransformer(new ToStringLabeller<>());
+
+        JFrame frame = new JFrame("MinHeap Visualization");
+        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);  // Set this to handle closing manually
+
+        frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                frame.dispose();
+            }
+        });
+        
+        frame.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                Dimension size = frame.getContentPane().getSize();
+                vv.setPreferredSize(size);
+                vv.revalidate();
+            }
+        });
+        
+        frame.getContentPane().add(vv);
+        frame.pack();
+        frame.setVisible(true);
+    }//GEN-LAST:event_jButton11ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -799,6 +907,7 @@ public class Interfaz extends javax.swing.JFrame {
     private javax.swing.JFileChooser fileChooser;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton10;
+    private javax.swing.JButton jButton11;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
