@@ -5,7 +5,7 @@
 package coladeimpresion;
 
 /**
- *
+ * Clase Register, la misma representa un documento en la impresora
  * @author manza
  */
 public class Register {

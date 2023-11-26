@@ -5,7 +5,7 @@
 package coladeimpresion;
 
 /**
- *
+ * Clase Node, usada para representar un elemento de tipo T
  * @author manza
  */
 public class Node<T> {

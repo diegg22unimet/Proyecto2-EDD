@@ -5,7 +5,8 @@
 package coladeimpresion;
 
 /**
- *
+ * Clase BinaryHeap, usada para representar una cola de prioridad, 
+ * donde la prioridad viene dada de acuerdo a una variable tiempo
  * @author manza
  */
 public class BinaryHeap {
@@ -47,6 +48,7 @@ public class BinaryHeap {
         return size == 0;
     }
     
+    //Inserta un elemento dentro del montículo
     public void insert(Register value) {
         if (getSize() == getCapacity()) {
             return;
@@ -56,13 +58,14 @@ public class BinaryHeap {
         heap[getSize()] = value;
         int currentIndex = getSize();
 
-        // Restaurar la propiedad del montículo después de la inserción
+        //Restaura la propiedad del montículo después de la inserción
         while (currentIndex > 1 && heap[currentIndex].getTime() < heap[currentIndex / 2].getTime()) {
             swap(currentIndex, currentIndex / 2);
             currentIndex = currentIndex / 2;
         }
     }
     
+    //Elimina el mínimo elemento y lo retorna
     public Register extractMin() {
         if (isEmpty()) {
             System.out.println("Heap is empty. Cannot extract minimum.");
@@ -73,22 +76,23 @@ public class BinaryHeap {
         heap[1] = heap[getSize()];
         size--;
 
-        // Restaurar la propiedad del min-heap después de la extracción
+        //Restaura la propiedad del montículo después de la extracción
         heapify(1);
 
         return min;
     }
     
+    //Encuentra el índice de un registro dado por parámetro
     public int findIndex(Register targetRegister) {
         for (int i = 1; i <= getSize(); i++) {
             if (heap[i] == targetRegister) {
                 return i;
             }
         }
-        // Si no se encuentra el Register, devuelve -1 o maneja la situación de alguna manera específica.
         return -1;
     }
     
+    //Restaura las propiedades del montículo después de una operación
     private void heapify(int index) {
         int smallest = index;
         int leftChild = 2 * index;
@@ -108,6 +112,7 @@ public class BinaryHeap {
         }
     }
     
+    //Actualiza la etiqueta de tiempo de un registro localizado en la posición dada por el índice
     public void updateRegisterValue(int index, int newTime) {
         if (index < 1 || index > getSize()) {
             System.out.println("Invalid index");
@@ -116,13 +121,13 @@ public class BinaryHeap {
 
         heap[index].setTime(newTime);
 
-        // Comprueba si el valor modificado es menor que el valor de su padre
+        //Comprueba si el valor modificado es menor que el valor de su padre
         while (index > 1 && heap[index].getTime() < heap[index / 2].getTime()) {
             swap(index, index / 2);
             index = index / 2;
         }
 
-        // Después de la actualización, ejecuta heapify desde el índice modificado
+        //Después de la actualización, restaura las propiedades del montículo
         heapify(index);
     }
     
@@ -132,6 +137,7 @@ public class BinaryHeap {
         heap[j] = temp;
     }
     
+    //Retorna un String con el contenido del montículo
     public String printHeap() {
         String result = "";
         for (int i = 1; i <= size; i++) {

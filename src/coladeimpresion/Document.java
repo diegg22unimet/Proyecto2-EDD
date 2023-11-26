@@ -5,7 +5,7 @@
 package coladeimpresion;
 
 /**
- *
+ * Clase Document, usada para representar los documentos añadidos por el usuario
  * @author manza
  */
 public class Document {

@@ -5,7 +5,9 @@
 package coladeimpresion;
 
 /**
- *
+ * HashTable, clase usada para representar una tabla hash que dado un nombre de usuario 
+ * como key value, retorna una lista de registros los cuales representan los documentos 
+ * que el usuario ha mandado a la impresora
  * @author Samuel
  */
 public class HashTable {
@@ -61,6 +63,7 @@ public class HashTable {
         }
     }
     
+    //Añade un elemento a la HashTable, usando el nombre de usuario como key
     public void put(String username, List<Register> documents) {
         List<UserDocuments> list = hashTable.get(Math.abs(username.hashCode()) % getMax());
         
@@ -77,6 +80,7 @@ public class HashTable {
         list.append(user);
     }
     
+    //Obtiene la lista de registros dada la key (username)
     public List<Register> get(String username) {
         List<UserDocuments> list = hashTable.get(Math.abs(username.hashCode()) % getMax());
 

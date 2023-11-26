@@ -5,7 +5,7 @@
 package coladeimpresion;
 
 /**
- *
+ * Clase List, usada para representar una lista de elementos de tipo T
  * @author manza
  */
 public class List<T> {
@@ -37,6 +37,7 @@ public class List<T> {
         return getHead() == null;
     }
     
+    //Añade un nodo al final de la lista
     public void append(T data) {
         Node<T> node = new Node<>(data);
         if (isEmpty()) {
@@ -50,6 +51,7 @@ public class List<T> {
         }
     }
     
+    //Obtiene el elemento de un nodo dado un índice
     public T get(int index) {
         if (isEmpty()) {
             return null;
@@ -72,6 +74,7 @@ public class List<T> {
         return null;
     }
 
+    //Elimina un nodo específico de la lista
     public void delete(Node node) {
         if (node == null) {
             return;

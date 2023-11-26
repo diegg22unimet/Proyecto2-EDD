@@ -5,7 +5,7 @@
 package coladeimpresion;
 
 /**
- *
+ * Clase Interfaz, usada para representar la interfaz de usuario
  * @author manza
  */
 import edu.uci.ics.jung.algorithms.layout.*;
@@ -44,6 +44,7 @@ public class Interfaz extends javax.swing.JFrame {
     }
     
     public void setDocumentsInPrinter(){
+        //Añade los documentos a eliminar en el JComboBox en la sección "Impresora"
         if(jComboBox5.getSelectedItem() == null){
             return;
         }
@@ -51,7 +52,9 @@ public class Interfaz extends javax.swing.JFrame {
         List<Register> documentsInPrinter = hashTable.get(username);
         Node<Register> aux = documentsInPrinter.getHead();
         jComboBox6.removeAllItems();
+        //Añade el documento sólo si la etiqueta de tiempo es diferente a -1
         
+        //Será -1 sólo cuando el documento se imprime, y no debe seguir mostrándose en la lista
         while(aux != null && aux.getData().getTime() != -1){
             jComboBox6.addItem(aux.getData().getDocument().getName());
             aux = aux.getNext();
@@ -545,6 +548,7 @@ public class Interfaz extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        //Lee el archivo y añade los usuarios a una lista enlazada 
         if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
             String name = fileChooser.getSelectedFile().getAbsolutePath();
             
@@ -554,14 +558,14 @@ public class Interfaz extends javax.swing.JFrame {
                 BufferedReader br = new BufferedReader(fr);
                 String line = " ";
                 String[] tempArr;
-                line = br.readLine();
+                line = br.readLine(); //Salta la primera línea
                 while ((line = br.readLine()) != null && line.split(",").length > 1) {
                     tempArr = line.split(",");
                     User newUser = new User(tempArr[0], tempArr[1]);
                     userList.append(newUser);
                 }
                 br.close();
-                
+                //Añade los usuarios a las listas desplegables 
                 Node<User> aux = userList.getHead();
                 while(aux != null){
                     deleteUsersList.addItem(aux.getData().getUsername());
@@ -581,6 +585,7 @@ public class Interfaz extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextField1ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        //Añade el usuario sólo si el nombre no está vacío
         String username = jTextField1.getText();
         if (username.isBlank() == false) {
             String priority = jComboBox2.getSelectedItem().toString();
@@ -597,6 +602,7 @@ public class Interfaz extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextField3ActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+        //Añade el documento a la lista de los documentos de los usuarios, sólo si los tres campos no están vacíos
         String docName = jTextField3.getText();
         String docSize = jTextField2.getText();
         String docType = jTextField4.getText();
@@ -620,10 +626,12 @@ public class Interfaz extends javax.swing.JFrame {
     }//GEN-LAST:event_jComboBox1ActionPerformed
 
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
+        //Elimina el documento de una lista de documentos de usuario, sólo si la lista desplegable tiene un ítem seleccionado
         if(jComboBox4.getSelectedItem() == null || chooseUser.getSelectedItem() == null){
             return;
         }
         
+        //Busca el nodo documento en la lista de documentos del usuario actual y lo elimina
         String docName = jComboBox4.getSelectedItem().toString();
         List<Document> documents = currentUser.getCreatedDocuments();
         
@@ -635,16 +643,19 @@ public class Interfaz extends javax.swing.JFrame {
             }
             aux = aux.getNext();
         }
-                
+        
+        //Elimina el documento de las listas desplegables
         jComboBox1.removeItem(docName);
         jComboBox4.removeItem(docName);
     }//GEN-LAST:event_jButton8ActionPerformed
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+        //Envía el documento al montículo y añade el usuario a la HastTable
         if(jComboBox4.getSelectedItem() == null){
             return;
         }
         
+        //Obtiene el documento en la lista de documentos de usuario
         String docName = jComboBox4.getSelectedItem().toString();
         
         List<Document> documents = currentUser.getCreatedDocuments();
@@ -658,11 +669,13 @@ public class Interfaz extends javax.swing.JFrame {
             }
             aux2 = aux2.getNext();
         }
-
+        
+        //Hace la etiqueta de tiempo de acuerdo a los segundos desde que se ejecutó el programa
         long seconds = (System.nanoTime() - initTime)/1000000000;
         String isImportant = jComboBox3.getSelectedItem().toString();
         if(isImportant.equals("Es prioritario")){
             String userPriority = currentUser.getPriority();
+            //Altera la etiqueta de tiempo de acuerdo a la prioridad del usuario
             seconds = switch (userPriority) {
                 case "Baja" -> seconds/2;
                 case "Media" -> seconds/3;
@@ -670,37 +683,43 @@ public class Interfaz extends javax.swing.JFrame {
             };
         }
         
+        //Crea un nuevo regitro para añadir al montículo
         Register newRegister = new Register(aux2.getData(), (int)seconds);
         priorityQueue.insert(newRegister);
         
+        //Setea el contenido del montículo en la interfaz
         String queueOrder = priorityQueue.printHeap();
         jTextArea1.setText(queueOrder);
         
+        //Añade un usuario a la HashTable, intentando primero acceder a la tabla hash dada por el usuario que añade el documento
         List<Register> documentsInPrinter = hashTable.get(currentUser.getUsername());
         if(documentsInPrinter != null){
+            //Si el usuario ya envió documentos, se actualiza la variable documentsInPrinter y se añaden nuevamente a la tbala hash
             documentsInPrinter.append(newRegister);
             hashTable.put(currentUser.getUsername(), documentsInPrinter);
         } else {
+            //Si no, se crea una nueva lista documentsInPrinter y se añade a la tabla hash 
             documentsInPrinter = new List<>();
             documentsInPrinter.append(newRegister);
             hashTable.put(currentUser.getUsername(), documentsInPrinter);
             jComboBox5.addItem(currentUser.getUsername());
         }
+        //Actualiza las listas desplegables en la sección "Impresora"
         setDocumentsInPrinter();
     }//GEN-LAST:event_jButton7ActionPerformed
 
     private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
+        //Extrae el mínimo registro del montículo
         Register r = priorityQueue.extractMin();
         if(r != null){
             String docName = r.getDocument().getName();
-            
+            //Elimina lógicamente el elemento de la tabla hash
             r.setTime(-1);
-            
+            //Actualiza la interfaz
             String queueOrder = priorityQueue.printHeap();
             jTextArea1.setText(queueOrder);
             jComboBox6.removeItem(docName);
             int itemsLeft = jComboBox6.getItemCount();
-            
             if(itemsLeft == 0){
                 jComboBox5.removeItem(jComboBox5.getSelectedItem().toString());
             }
@@ -708,12 +727,13 @@ public class Interfaz extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton9ActionPerformed
 
     private void chooseUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chooseUserActionPerformed
+        //Cambia la variable currentUser
         if (chooseUser.getSelectedItem() == null) {
             return;
         }
-        
         String username = chooseUser.getSelectedItem().toString();
         
+        //Busca el usuario en userList
         Node<User> aux = userList.getHead();
         while(aux != null){
             if(aux.getData().getUsername().equals(username)){
@@ -723,6 +743,7 @@ public class Interfaz extends javax.swing.JFrame {
         }
         currentUser = aux.getData();
         
+        //Actualiza las listas desplegables de los elementos a imprimir y eliminar
         jComboBox1.removeAllItems();
         jComboBox4.removeAllItems();
         Node<Document> aux2 = currentUser.getCreatedDocuments().getHead();
@@ -734,6 +755,7 @@ public class Interfaz extends javax.swing.JFrame {
     }//GEN-LAST:event_chooseUserActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        //Elimina un usuario de la lista de usuarios, sólo si la lista desplegable tiene un ítem seleccionado
         if (deleteUsersList.getSelectedItem() == null) {
             return;
         }

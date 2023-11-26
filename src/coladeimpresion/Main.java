@@ -5,7 +5,7 @@
 package coladeimpresion;
 
 /**
- *
+ * Clase principal del proyecto
  * @author manza
  */
 public class Main {
@@ -14,6 +14,7 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        //Ejecuta la interfaz de usuario
         Interfaz fw = new Interfaz();
         fw.setVisible(true);
     }

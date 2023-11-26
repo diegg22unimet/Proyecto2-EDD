@@ -5,7 +5,7 @@
 package coladeimpresion;
 
 /**
- *
+ * Clase User, usada para representar un usuario y cada uno puede tener cero o más documentos 
  * @author manza
  */
 public class User {
